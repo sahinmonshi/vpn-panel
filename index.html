@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My VPN Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+      padding: 20px;
+    }
+    .card {
+      max-width: 420px;
+      margin: 30px auto;
+      padding: 22px;
+      background: #1e293b;
+      border-radius: 14px;
+    }
+    input, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+    }
+    input { border: 1px solid #64748b; }
+    button {
+      background: #16a34a;
+      color: white;
+      border: 0;
+      font-size: 16px;
+    }
+    #result { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>My VPN Reseller Panel</h2>
+    <p>Demo PIN Generator</p>
+    <label>PIN validity (days)</label>
+    <input id="days" type="number" min="1" max="365"
+           value="30">
+    <button onclick="makePin()">Generate Demo PIN</button>
+    <p id="result">Your PIN will appear here.</p>
+  </div>
+  <script>
+    function makePin() {
+      const days = Number(document.getElementById("days").value);
+      if (!Number.isInteger(days) || days < 1 || days > 365) {
+        document.getElementById("result").textContent =
+          "Enter a validity between 1 and 365 days.";
+        return;
+      }
+      const pin = Array.from(
+        crypto.getRandomValues(new Uint8Array(8)),
+        n => n.toString(16).padStart(2, "0")
+      ).join("").toUpperCase();
+      const expiry = new Date(Date.now() + days * 86400000);
+      document.getElementById("result").textContent =
+        "DEMO PIN: " + pin + " | Expires: " +
+        expiry.toLocaleDateString();
+    }
+  </script>
+</body>
+</html>
